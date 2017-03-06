@@ -11,7 +11,27 @@ class Facebook_Page_Plugin_Widget extends WP_Widget {
 	}
 	// Display Widget in front end
 	public function widget( $args, $instance ) {
-		parent::widget( $args, $instance );
+		$data = array();
+		$data['title'] = esc_attr($instance['title']);
+		$data['page_url'] = esc_attr($instance['page_url']);
+		$data['show_timeline'] = esc_attr($instance['show_timeline']);
+		$data['adapt_container'] = esc_attr($instance['adapt_container']);
+		$data['width'] = esc_attr($instance['width']);
+		$data['height'] = esc_attr($instance['height']);
+		$data['show_facepile'] = esc_attr($instance['show_facepile']);
+		$data['small_header'] = esc_attr($instance['small_header']);
+		$data['hide_cover'] = esc_attr($instance['hide_cover']);
+
+		echo $args['before_widget'];
+
+		echo $args['before_title'];
+		echo $data['title'];
+		echo $args['after_title'];
+
+		// Get Main Content
+		echo $this->getPagePlugin($data);
+
+		echo $args['after_widget'];
 	}
 
 	// Backend Form
@@ -224,6 +244,31 @@ class Facebook_Page_Plugin_Widget extends WP_Widget {
 			</select>
 		</p>
 
+		<?php
+	}
+
+	// Show frontent content
+	public function getPagePlugin($data) {
+		?>
+		<div class="fb-page"
+		     data-href="<?php echo $data['page_url']; ?>"
+		     <?php if($data['show_timeline'] == 'true') : ?>
+		     data-tabs="timeline"
+		     <?php endif; ?>
+		        data-small-header="<?php echo $data['small_header']; ?>"
+		     <?php if($data['adapt_containter'] == 'false') : ?>
+			     data-width="<?php echo $data['width']; ?>"
+			     data-height="<?php echo $data['height']; ?>"
+		     <?php else : ?>
+			    data-adapt-container-width="<?php echo $data['adapt_container']; ?>"
+		     <?php endif; ?>
+		     data-hide-cover="<?php echo $data['hide_cover']; ?>"
+		     data-show-facepile="<?php echo $data['show_facepile']; ?>"
+		>
+			<blockquote cite="<?php echo $data['page_url']; ?>" class="fb-xfbml-parse-ignore">
+				<a href="<?php echo $data['page_url']; ?>">Facebook</a>
+			</blockquote>
+		</div>
 		<?php
 	}
 }
